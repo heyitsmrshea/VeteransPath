@@ -26,11 +26,13 @@ if submitted:
 
     if goal == "Build my resume":
         st.header("Resume Builder")
-        uploaded_file = st.file_uploader("Upload a FITREP / Evaluation (TXT or PDF)", type=["txt", "pdf"])
-        manual_input = st.text_area("Or paste a summary of your experience")
-        target_role = st.text_input("What role are you targeting? (e.g., Cybersecurity Analyst)")
+        with st.form("resume_form"):
+            uploaded_file = st.file_uploader("Upload a FITREP / Evaluation (TXT or PDF)", type=["txt", "pdf"])
+            manual_input = st.text_area("Or paste a summary of your experience")
+            target_role = st.text_input("What role are you targeting? (e.g., Cybersecurity Analyst)")
+            submit_resume = st.form_submit_button("Generate Resume Bullets")
 
-        if st.button("Generate Resume Bullets"):
+        if submit_resume:
             if uploaded_file:
                 text = uploaded_file.read().decode("utf-8")
             elif manual_input:
