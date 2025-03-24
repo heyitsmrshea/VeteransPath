@@ -1,5 +1,7 @@
+
 import streamlit as st
-from resume_helper import generate_sample_resume_bullets, mock_interview_questions, suggest_career_paths
+import os
+from resume_helper import translate_fitrep_to_resume
 
 st.set_page_config(page_title="VeteranPath", layout="centered")
 st.title("Welcome to VeteranPath")
@@ -15,8 +17,7 @@ with st.form("onboarding"):
     goal = st.selectbox("What’s your current goal?", [
         "Build my resume",
         "Prep for interviews",
-        "Explore civilian careers",
-        "Improve my networking presence (coming soon)"
+        "Explore civilian careers"
     ])
     submitted = st.form_submit_button("Continue")
 
@@ -27,6 +28,7 @@ if submitted:
         st.header("Resume Builder")
         uploaded_file = st.file_uploader("Upload a FITREP / Evaluation (TXT or PDF)", type=["txt", "pdf"])
         manual_input = st.text_area("Or paste a summary of your experience")
+        target_role = st.text_input("What role are you targeting? (e.g., Cybersecurity Analyst)")
 
         if st.button("Generate Resume Bullets"):
             if uploaded_file:
@@ -37,31 +39,32 @@ if submitted:
                 st.warning("Please upload a file or paste your experience.")
                 st.stop()
 
-            bullets = generate_sample_resume_bullets(text)
-            resume_text = "\n".join([f"- {bullet}" for bullet in bullets])
-            st.text_area("Generated Resume Bullets", value=resume_text, height=200)
-
-            st.download_button(
-                label="📄 Download Resume Bullets as .txt",
-                data=resume_text,
-                file_name="resume_bullets.txt",
-                mime="text/plain"
-            )
+            if target_role:
+                bullets = translate_fitrep_to_resume(text, target_role)
+                st.subheader("Generated Resume Bullets")
+                for bullet in bullets:
+                    st.write(f"- {bullet}")
+            else:
+                st.warning("Please enter a target role.")
 
     elif goal == "Prep for interviews":
         st.header("Interview Prep")
-        target_role = st.text_input("What role are you interviewing for?")
-        if st.button("Show Practice Questions"):
-            questions = mock_interview_questions(target_role)
-            st.subheader(f"Practice Questions for a {target_role} Role")
-            for q in questions:
-                st.write(f"• {q}")
+        st.info("Coming soon: Role-specific mock questions and STAR-style practice.")
 
     elif goal == "Explore civilian careers":
         st.header("Career Exploration")
-        interests = st.text_input("What are you interested in?")
-        if st.button("Suggest Career Paths"):
-            paths = suggest_career_paths(interests, mos)
-            st.subheader("Suggested Career Paths")
-            for path in paths:
-                st.write(f"• {path}")
+        st.info("Coming soon: Job matches based on MOS, skills, and interests.")
+
+# Resume Template Picker
+st.header("Choose a Resume Template")
+template_files = [f for f in os.listdir("templates") if f.endswith((".docx", ".pdf", ".txt"))]
+selected_template = st.selectbox("Select a resume template to download:", template_files)
+
+if selected_template:
+    with open(f"templates/{selected_template}", "rb") as f:
+        st.download_button(
+            label="📄 Download Resume Template",
+            data=f,
+            file_name=selected_template,
+            mime="application/octet-stream"
+        )
