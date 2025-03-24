@@ -30,8 +30,8 @@ if not st.session_state.onboarded:
             st.rerun()  # Force rerun so UI updates cleanly
 
 # Resume Builder or Other Goals
-if st.session_state.onboarded:
-    goal = st.session_state.goal
+if st.session_state.get("onboarded", False):
+    goal = st.session_state.get("goal", "")
     st.success(f"Awesome! Let’s help you {goal.lower()}.")
 
     if goal == "Build my resume":
@@ -47,13 +47,13 @@ if st.session_state.onboarded:
             text = None
             if uploaded_file:
                 text = uploaded_file.read().decode("utf-8")
-            elif st.session_state.manual_input:
+            elif st.session_state.get("manual_input"):
                 text = st.session_state.manual_input
             else:
                 st.warning("Please upload a file or paste your experience.")
                 st.stop()
 
-            if st.session_state.target_role:
+            if st.session_state.get("target_role"):
                 with st.spinner("Translating FITREP to resume bullets..."):
                     bullets = translate_fitrep_to_resume(text, st.session_state.target_role)
                 st.subheader("Generated Resume Bullets")
