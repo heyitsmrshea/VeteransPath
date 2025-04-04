@@ -44,11 +44,11 @@ def show_branch_card(name, image_path, motto):
         img_bytes = Path(image_path).read_bytes()
         encoded = base64.b64encode(img_bytes).decode()
         st.markdown(f"""
-            <a href='/?branch={name}' class='branch-link'>
-                <div class='branch-card fadein'>
-                    <img src='data:image/png;base64,{encoded}' width='100' class='branch-img'/><br>
-                    <div class='branch-title'>{name}</div>
-                    <div class='branch-motto'>{motto}</div>
+            <a href='/?branch={name}'>
+                <div style='text-align: center;'>
+                    <img src='data:image/png;base64,{encoded}' width='100'/><br>
+                    <div style='font-weight:bold; margin-top:0.5rem;'>{name}</div>
+                    <div style='font-size:13px; color:gray;'>{motto}</div>
                 </div>
             </a>
         """, unsafe_allow_html=True)
@@ -70,71 +70,22 @@ st.markdown("""
 # --- Icons Row ---
 st.markdown("""
 <div class='icon-row'>
-    <div class='icon-card animate'><span style='font-size: 2rem;'>🎯</span><br><span class='icon-label'>Translate your experience</span></div>
-    <div class='icon-card animate'><span style='font-size: 2rem;'>📄</span><br><span class='icon-label'>Build a Word resume</span></div>
-    <div class='icon-card animate'><span style='font-size: 2rem;'>🚀</span><br><span class='icon-label'>Target your next mission</span></div>
+    <div class='icon-card'>🎯<br>Translate your experience</div>
+    <div class='icon-card'>📄<br>Build a Word resume</div>
+    <div class='icon-card'>🚀<br>Target your next mission</div>
 </div>
-
 <style>
 .icon-row {
     display: flex;
     justify-content: center;
-    gap: 3rem;
-    margin-top: 2rem;
+    gap: 2rem;
+    margin-top: 1.5rem;
 }
 .icon-card {
     width: 180px;
     text-align: center;
-    font-size: 16px;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: flyIn 1s ease-out forwards;
-}
-.icon-card:nth-child(2) { animation-delay: 0.2s; }
-.icon-card:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes flyIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-.branch-card {
-    text-align: center;
-    padding: 1rem;
-    border-radius: 16px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInLogo 1s ease forwards;
-}
-.branch-card:nth-child(1) { animation-delay: 0.2s; }
-.branch-card:nth-child(2) { animation-delay: 0.3s; }
-.branch-card:nth-child(3) { animation-delay: 0.4s; }
-.branch-card:nth-child(4) { animation-delay: 0.5s; }
-.branch-card:nth-child(5) { animation-delay: 0.6s; }
-.branch-card:nth-child(6) { animation-delay: 0.7s; }
-
-@keyframes fadeInLogo {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-.branch-img {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.branch-link:hover .branch-img {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(0, 128, 255, 0.3);
-}
-.branch-title {
-    font-weight: bold;
-    margin-top: 0.5rem;
-}
-.branch-motto {
-    font-size: 13px;
-    color: gray;
+    padding: 0.5rem;
+    font-size: 14px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -152,7 +103,7 @@ for i, col in enumerate(first_row):
         show_branch_card(name, data["image"], data["motto"])
 
 # Add a spacer between rows
-st.markdown("<div style='height: 3rem;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
 
 second_row = st.columns(3)
 for i, col in enumerate(second_row):
